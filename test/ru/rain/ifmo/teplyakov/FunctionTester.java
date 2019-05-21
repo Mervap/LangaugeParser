@@ -28,5 +28,6 @@ public class FunctionTester extends BasicTester {
         assertTrue(exceptionHelper("f(10)"));
         assertTrue(exceptionHelper("f(x,y)={(x+y)}", "f(10)"));
         assertTrue(exceptionHelper("f()={10}", "f()"));
+        assertTrue(exceptionHelper("f(x)={(x+y)}", "g(x,y)={f(x)}", "g(5,10)"));
     }
 }

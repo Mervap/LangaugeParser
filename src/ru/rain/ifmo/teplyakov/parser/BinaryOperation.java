@@ -17,8 +17,13 @@ public class BinaryOperation implements TreeNode {
     }
 
     @Override
-    public Integer evaluate(Map<String, Integer> context) throws ParserException {
+    public Integer evaluate(Map<String, Integer> context) {
         return op.apply(left.evaluate(context), right.evaluate(context));
+    }
+
+    @Override
+    public TreeNode[] getChildren() {
+        return new TreeNode[]{left, right};
     }
 
     private BinaryOperator<Integer> op;

@@ -14,8 +14,13 @@ public class UnaryOperation implements TreeNode {
     }
 
     @Override
-    public Integer evaluate(Map<String, Integer> context) throws ParserException {
+    public Integer evaluate(Map<String, Integer> context) {
         return op.apply(argument.evaluate(context));
+    }
+
+    @Override
+    public TreeNode[] getChildren() {
+        return new TreeNode[]{argument};
     }
 
     private Function<Integer, Integer> op;

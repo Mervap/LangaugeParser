@@ -14,8 +14,13 @@ public class IfExpression implements TreeNode {
     }
 
     @Override
-    public Integer evaluate(Map<String, Integer> context)  throws ParserException {
+    public Integer evaluate(Map<String, Integer> context)  {
         return condition.evaluate(context) == 0 ? falseBranch.evaluate(context) : trueBranch.evaluate(context);
+    }
+
+    @Override
+    public TreeNode[] getChildren() {
+        return new TreeNode[]{condition, trueBranch, falseBranch};
     }
 
     private TreeNode condition;

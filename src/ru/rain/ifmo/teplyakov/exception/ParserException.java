@@ -1,6 +1,6 @@
 package ru.rain.ifmo.teplyakov.exception;
 
-public class ParserException extends Exception {
+public class ParserException extends LanguageException {
     public ParserException() {
         super();
     }

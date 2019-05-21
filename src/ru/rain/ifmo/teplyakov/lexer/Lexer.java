@@ -48,7 +48,7 @@ public class Lexer {
             } else if (c == ',') {
                 nextTokenType = Token.TokenType.COMMA;
             } else {
-                throw new SyntaxException("Syntax error");
+                throw new SyntaxException();
             }
 
             if (token.length() > 0 &&

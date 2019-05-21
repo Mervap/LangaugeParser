@@ -33,7 +33,7 @@ public class Main {
         try {
             run(lines);
         } catch (ParserException e) {
-            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
         }
     }
 }

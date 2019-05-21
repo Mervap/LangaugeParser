@@ -4,7 +4,9 @@ import java.util.List;
 
 public class FunctionDefinition {
 
-    public FunctionDefinition() {
+    public FunctionDefinition(String functionName, int line) {
+        this.functionName = functionName;
+        this.line = line;
         this.arguments = null;
         this.body = null;
     }
@@ -12,6 +14,10 @@ public class FunctionDefinition {
     public void setFields(List<String> argument, TreeNode body) {
         this.arguments = argument;
         this.body = body;
+    }
+
+    public String getFunctionName() {
+        return functionName;
     }
 
     public List<String> getArguments() {
@@ -22,6 +28,12 @@ public class FunctionDefinition {
         return body;
     }
 
+    public int getLine() {
+        return line;
+    }
+
+    private String functionName;
+    private int line;
     private List<String> arguments;
     private TreeNode body;
 }

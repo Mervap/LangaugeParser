@@ -11,11 +11,13 @@ public class Variable implements TreeNode {
     }
 
     @Override
-    public Integer evaluate(Map<String, Integer> context) throws ParameterNotFoundException {
-        if (!context.containsKey(var)) {
-            throw new ParameterNotFoundException(var);
-        }
+    public Integer evaluate(Map<String, Integer> context) {
         return context.get(var);
+    }
+
+    @Override
+    public TreeNode[] getChildren() {
+        return new TreeNode[0];
     }
 
     public String getVar() {

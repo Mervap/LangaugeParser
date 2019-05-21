@@ -13,5 +13,10 @@ public class Number implements TreeNode {
         return val;
     }
 
+    @Override
+    public TreeNode[] getChildren() {
+        return new TreeNode[0];
+    }
+
     private Integer val;
 }

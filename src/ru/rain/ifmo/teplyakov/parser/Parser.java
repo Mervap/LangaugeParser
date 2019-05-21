@@ -1,8 +1,6 @@
 package ru.rain.ifmo.teplyakov.parser;
 
-import ru.rain.ifmo.teplyakov.exception.FunctionNotFoundException;
-import ru.rain.ifmo.teplyakov.exception.ParserException;
-import ru.rain.ifmo.teplyakov.exception.SyntaxException;
+import ru.rain.ifmo.teplyakov.exception.*;
 import ru.rain.ifmo.teplyakov.lexer.Lexer;
 import ru.rain.ifmo.teplyakov.lexer.Token;
 
@@ -33,10 +31,19 @@ public class Parser {
         if (lines.get(lines.size() - 1).size() > pos) {
             throw new SyntaxException();
         }
+
+        for (FunctionDefinition fd : functions.values()) {
+            checkFunctionsArguments(fd.getBody(), fd.getLine());
+            checkVariables(fd.getBody(), new HashSet<>(fd.getArguments()), fd.getLine());
+        }
+
+        checkFunctionsArguments(root, functions.size() + 1);
+        checkVariables(root, Collections.emptySet(), functions.size() + 1);
     }
 
     public List<Token> getLine(List<List<Token>> tokens, int i) {
         pos = 0;
+        curLine = i + 1;
         return tokens.get(i);
     }
 
@@ -65,7 +72,7 @@ public class Parser {
             if (getCur().getTokenType().equals(Token.TokenType.OPEN_PARENTHESIS)) {
                 ++pos;
                 if (!functions.containsKey(curToken.getToken())) {
-                    throw new FunctionNotFoundException("");
+                    throw new FunctionNotFoundException(curToken.getToken(), curLine);
                 }
                 arg = new FunctionCall(parseFunctionCall(), functions.get(curToken.getToken()));
             } else {
@@ -137,7 +144,7 @@ public class Parser {
                 result = new BinaryOperation((a, b) -> a.equals(b) ? 1 : 0, left, right);
                 break;
             default:
-                throw new SyntaxException("Unknown binop");
+                throw new SyntaxException();
         }
 
         return result;
@@ -250,11 +257,52 @@ public class Parser {
         if (!functionName.getTokenType().equals(Token.TokenType.IDENTIFIER)) {
             throw new SyntaxException();
         }
-        functions.put(functionName.getToken(), new FunctionDefinition());
+        functions.put(functionName.getToken(), new FunctionDefinition(functionName.getToken(), curLine));
+    }
+
+    private void checkFunctionsArguments(TreeNode node, int line) throws ParserException {
+
+        if (node == null) {
+            return;
+        }
+
+        if (node instanceof FunctionCall && ((FunctionCall) node).isBadArguments()) {
+            throw new ArgumentNumberMismatchException(((FunctionCall) node).getFunctionDefinition().getFunctionName(), line);
+        }
+
+        for (TreeNode child : node.getChildren()) {
+            checkFunctionsArguments(child, line);
+        }
+
+    }
+
+    private void checkVariables(TreeNode node, Set<String> context, int line) throws ParserException {
+
+        if (node == null) {
+            return;
+        }
+
+        if (node instanceof Variable && !context.contains(((Variable) node).getVar())) {
+            throw new ParameterNotFoundException(((Variable) node).getVar(), line);
+        }
+
+        Set<String> newContext = context;
+        if (node instanceof FunctionCall) {
+            newContext = new HashSet<>();
+            FunctionDefinition fc = ((FunctionCall) node).getFunctionDefinition();
+            for (int i = 0; i < fc.getArguments().size(); ++i) {
+                newContext.add(fc.getArguments().get(i));
+            }
+        }
+
+        for (TreeNode child : node.getChildren()) {
+            checkVariables(child, newContext, line);
+        }
     }
 
     private Map<String, FunctionDefinition> functions;
     private TreeNode root;
     private int pos = 0;
     private List<Token> tokens;
+    private int curLine = 0;
 }
