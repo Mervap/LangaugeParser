@@ -18,5 +18,10 @@ public class Number implements TreeNode {
         return new TreeNode[0];
     }
 
+    @Override
+    public String toString() {
+        return val.toString();
+    }
+
     private Integer val;
 }

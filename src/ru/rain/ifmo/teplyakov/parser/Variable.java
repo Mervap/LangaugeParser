@@ -1,7 +1,5 @@
 package ru.rain.ifmo.teplyakov.parser;
 
-import ru.rain.ifmo.teplyakov.exception.ParameterNotFoundException;
-
 import java.util.Map;
 
 public class Variable implements TreeNode {
@@ -21,6 +19,11 @@ public class Variable implements TreeNode {
     }
 
     public String getVar() {
+        return var;
+    }
+
+    @Override
+    public String toString() {
         return var;
     }
 

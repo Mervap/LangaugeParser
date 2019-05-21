@@ -120,28 +120,28 @@ public class Parser {
         TreeNode result;
         switch (opToken.getToken()) {
             case "+":
-                result = new BinaryOperation(Integer::sum, left, right);
+                result = new BinaryOperation(Integer::sum, "+", left, right);
                 break;
             case "-":
-                result = new BinaryOperation((a, b) -> a - b, left, right);
+                result = new BinaryOperation((a, b) -> a - b, "-", left, right);
                 break;
             case "*":
-                result = new BinaryOperation((a, b) -> a * b, left, right);
+                result = new BinaryOperation((a, b) -> a * b, "*", left, right);
                 break;
             case "/":
-                result = new BinaryOperation((a, b) -> a / b, left, right);
+                result = new BinaryOperation((a, b) -> a / b, "/", left, right);
                 break;
             case "%":
-                result = new BinaryOperation((a, b) -> a % b, left, right);
+                result = new BinaryOperation((a, b) -> a % b, "%", left, right);
                 break;
             case ">":
-                result = new BinaryOperation((a, b) -> a > b ? 1 : 0, left, right);
+                result = new BinaryOperation((a, b) -> a > b ? 1 : 0, ">", left, right);
                 break;
             case "<":
-                result = new BinaryOperation((a, b) -> a < b ? 1 : 0, left, right);
+                result = new BinaryOperation((a, b) -> a < b ? 1 : 0, "<", left, right);
                 break;
             case "=":
-                result = new BinaryOperation((a, b) -> a.equals(b) ? 1 : 0, left, right);
+                result = new BinaryOperation((a, b) -> a.equals(b) ? 1 : 0, "=", left, right);
                 break;
             default:
                 throw new SyntaxException();
@@ -286,17 +286,8 @@ public class Parser {
             throw new ParameterNotFoundException(((Variable) node).getVar(), line);
         }
 
-        Set<String> newContext = context;
-        if (node instanceof FunctionCall) {
-            newContext = new HashSet<>();
-            FunctionDefinition fc = ((FunctionCall) node).getFunctionDefinition();
-            for (int i = 0; i < fc.getArguments().size(); ++i) {
-                newContext.add(fc.getArguments().get(i));
-            }
-        }
-
         for (TreeNode child : node.getChildren()) {
-            checkVariables(child, newContext, line);
+            checkVariables(child, context, line);
         }
     }
 
