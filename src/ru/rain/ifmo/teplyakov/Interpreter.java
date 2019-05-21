@@ -6,14 +6,15 @@ import ru.rain.ifmo.teplyakov.lexer.Lexer;
 import ru.rain.ifmo.teplyakov.lexer.Token;
 import ru.rain.ifmo.teplyakov.parser.Parser;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class Interpreter {
 
-    public static Object run(List<String> lines) throws ParserException {
+    public static Integer run(List<String> lines) throws ParserException {
         Lexer lexer = new Lexer();
         for (String s : lines) {
             lexer.addTokens(s);
@@ -31,7 +32,7 @@ public class Main {
         }
 
         try {
-            run(lines);
+            System.out.println(run(lines));
         } catch (ParserException e) {
             System.out.println(e.getMessage());
         }
