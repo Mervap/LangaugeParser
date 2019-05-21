@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Lexer {
 
-    public Lexer() throws SyntaxException {
+    public Lexer() {
         tokens = new ArrayList<>();
     }
 
@@ -38,9 +38,21 @@ public class Lexer {
             } else if (isOperation(c)) {
                 nextTokenType = Token.TokenType.OPERATION;
             } else if (c == '(') {
-                nextTokenType = Token.TokenType.OPEN_BRACKET;
+                nextTokenType = Token.TokenType.OPEN_PARENTHESIS;
             } else if (c == ')') {
+                nextTokenType = Token.TokenType.CLOSE_PARENTHESIS;
+            } else if (c == '[') {
+                nextTokenType = Token.TokenType.OPEN_SQUARE_BRACKET;
+            } else if (c == ']') {
+                nextTokenType = Token.TokenType.CLOSE_SQUARE_BRACKET;
+            } else if (c == '{') {
+                nextTokenType = Token.TokenType.OPEN_BRACKET;
+            } else if (c == '}') {
                 nextTokenType = Token.TokenType.CLOSE_BRACKET;
+            } else if (c == '?') {
+                nextTokenType = Token.TokenType.QUESTION;
+            } else if (c == ':') {
+                nextTokenType = Token.TokenType.COLON;
             } else {
                 throw new SyntaxException("Syntax error");
             }

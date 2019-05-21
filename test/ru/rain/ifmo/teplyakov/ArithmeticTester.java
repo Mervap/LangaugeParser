@@ -2,16 +2,9 @@ package ru.rain.ifmo.teplyakov;
 
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
-public class ArithmeticTester {
-
-    private List<String> helper(String s) {
-        return Collections.singletonList(s);
-    }
+public class ArithmeticTester extends BasicTester {
 
     @Test
     public void add() throws SyntaxException {
@@ -46,20 +39,34 @@ public class ArithmeticTester {
     }
 
     @Test
-    public void allOperations() throws SyntaxException {
+    public void allArithmeticOperations() throws SyntaxException {
         assertEquals(4, Main.run(helper("(2+((3*4)/5))")));
         assertEquals(6, Main.run(helper("((((45*461)/191)+4738)%10)")));
         assertEquals(10, Main.run(helper("(((10/6)*6)+(10%6))")));
     }
 
-    private boolean exceptionHelper(String s) {
-        try {
-            Main.run(helper(s));
-        } catch (SyntaxException e) {
-            return true;
-        }
+    @Test
+    public void less() throws SyntaxException {
+        assertEquals(1, Main.run(helper("(1<2)")));
+        assertEquals(0, Main.run(helper("(2<1)")));
+        assertEquals(1, Main.run(helper("((50-10)<(50-9))")));
+        assertEquals(1, Main.run(helper("((2<1)<(1<2))")));
+    }
 
-        return false;
+    @Test
+    public void greater() throws SyntaxException {
+        assertEquals(0, Main.run(helper("(1>2)")));
+        assertEquals(1, Main.run(helper("(2>1)")));
+        assertEquals(0, Main.run(helper("((50-10)>(50-9))")));
+        assertEquals(1, Main.run(helper("((2>1)>(1>2))")));
+    }
+
+    @Test
+    public void equals() throws SyntaxException {
+        assertEquals(1, Main.run(helper("(1=1)")));
+        assertEquals(1, Main.run(helper("((10-5)=5)")));
+        assertEquals(0, Main.run(helper("(1=2)")));
+        assertEquals(0, Main.run(helper("(((50+10)-1)=(12*6))")));
     }
 
     @Test

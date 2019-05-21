@@ -11,8 +11,14 @@ public class Token {
         NUMBER,
         IDENTIFIER,
         OPERATION,
+        OPEN_PARENTHESIS,
+        CLOSE_PARENTHESIS,
+        OPEN_SQUARE_BRACKET,
+        CLOSE_SQUARE_BRACKET,
         OPEN_BRACKET,
         CLOSE_BRACKET,
+        QUESTION,
+        COLON,
         EMPTY
     }
 

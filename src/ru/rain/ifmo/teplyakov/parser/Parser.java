@@ -1,8 +1,8 @@
 package ru.rain.ifmo.teplyakov.parser;
 
+import ru.rain.ifmo.teplyakov.SyntaxException;
 import ru.rain.ifmo.teplyakov.lexer.Lexer;
 import ru.rain.ifmo.teplyakov.lexer.Token;
-import ru.rain.ifmo.teplyakov.SyntaxException;
 
 import java.util.List;
 
@@ -27,8 +27,10 @@ public class Parser {
 
         TreeNode arg;
         Token curToken = getNext(tokens);
-        if (curToken.getTokenType().equals(Token.TokenType.OPEN_BRACKET)) {
+        if (curToken.getTokenType().equals(Token.TokenType.OPEN_PARENTHESIS)) {
             arg = parseBinaryOperation(tokens);
+        } else if (curToken.getTokenType().equals(Token.TokenType.OPEN_SQUARE_BRACKET)) {
+            arg = parseIfExpression(tokens);
         } else if (curToken.getTokenType().equals(Token.TokenType.NUMBER)) {
             arg = new Number(Integer.valueOf(curToken.getToken()));
         } else if (curToken.getTokenType().equals(Token.TokenType.OPERATION)
@@ -42,12 +44,16 @@ public class Parser {
         return arg;
     }
 
-    private Token getNext(List<Token> tokens) throws SyntaxException{
+    private Token getNext(List<Token> tokens) throws SyntaxException {
         if (tokens.size() <= pos) {
             throw new SyntaxException();
         }
 
         return tokens.get(pos++);
+    }
+
+    private boolean nextNotEqual(List<Token> tokens, Token.TokenType tokenType) throws SyntaxException {
+        return !getNext(tokens).getTokenType().equals(tokenType);
     }
 
     private TreeNode parseBinaryOperation(List<Token> tokens) throws SyntaxException {
@@ -58,7 +64,7 @@ public class Parser {
         }
         TreeNode right = parseArgument(tokens);
 
-        if (!getNext(tokens).getTokenType().equals(Token.TokenType.CLOSE_BRACKET)) {
+        if (nextNotEqual(tokens, Token.TokenType.CLOSE_PARENTHESIS)) {
             throw new SyntaxException();
         }
 
@@ -93,6 +99,39 @@ public class Parser {
         }
 
         return result;
+    }
+
+    private TreeNode parseIfExpression(List<Token> tokens) throws SyntaxException {
+        TreeNode condition = parseArgument(tokens);
+
+        Token.TokenType[] tmp =
+                {Token.TokenType.CLOSE_SQUARE_BRACKET,
+                        Token.TokenType.QUESTION,
+                        Token.TokenType.OPEN_BRACKET,
+                        Token.TokenType.CLOSE_BRACKET,
+                        Token.TokenType.COLON,
+                        Token.TokenType.OPEN_BRACKET,
+                        Token.TokenType.CLOSE_BRACKET};
+
+        int cur = 0;
+        for (; cur < 3; ++cur) {
+            if (nextNotEqual(tokens, tmp[cur])) {
+                throw new SyntaxException();
+            }
+        }
+
+        TreeNode trueBranch = parseArgument(tokens);
+        for (; cur < 6; ++cur) {
+            if (nextNotEqual(tokens, tmp[cur])) {
+                throw new SyntaxException();
+            }
+        }
+        TreeNode falseBranch = parseArgument(tokens);
+        if (nextNotEqual(tokens, tmp[cur])) {
+            throw new SyntaxException();
+        }
+
+        return new IfExpression(condition, trueBranch, falseBranch);
     }
 
     //private Map<String, TreeNode> functions
