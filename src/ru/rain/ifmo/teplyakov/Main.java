@@ -1,29 +1,26 @@
 package ru.rain.ifmo.teplyakov;
 
+import ru.rain.ifmo.teplyakov.exception.ParserException;
+import ru.rain.ifmo.teplyakov.exception.SyntaxException;
 import ru.rain.ifmo.teplyakov.lexer.Lexer;
 import ru.rain.ifmo.teplyakov.lexer.Token;
 import ru.rain.ifmo.teplyakov.parser.Parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static Object run(List<String> lines) throws SyntaxException {
+    public static Object run(List<String> lines) throws ParserException {
         Lexer lexer = new Lexer();
         for (String s : lines) {
             lexer.addTokens(s);
         }
 
         Parser parser = new Parser(lexer);
-        while (lexer.hasNext()) {
-            for (Token token : lexer.getNext()) {
-                System.out.println(token.toString());
-            }
-        }
-
-        return parser.getTree().evaluate();
+        return parser.getTree().evaluate(Collections.emptyMap());
     }
 
     public static void main(String[] args) {
@@ -35,7 +32,7 @@ public class Main {
 
         try {
             run(lines);
-        } catch (SyntaxException e) {
+        } catch (ParserException e) {
             System.out.println(e.getCause());
         }
     }

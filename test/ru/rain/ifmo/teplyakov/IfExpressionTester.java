@@ -1,6 +1,8 @@
 package ru.rain.ifmo.teplyakov;
 
 import org.junit.Test;
+import ru.rain.ifmo.teplyakov.exception.ParserException;
+import ru.rain.ifmo.teplyakov.exception.SyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 public class IfExpressionTester extends BasicTester {
 
     @Test
-    public void testCorrect() throws SyntaxException {
+    public void testCorrect() throws ParserException {
         assertEquals(-100, Main.run(helper("[((10+20)>(20+10))]?{100}:{-100}")));
         assertEquals(-100, Main.run(helper("[((10+20)<(20+10))]?{100}:{-100}")));
         assertEquals(100, Main.run(helper("[((10+20)=(20+10))]?{100}:{-100}")));

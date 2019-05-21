@@ -1,5 +1,7 @@
 package ru.rain.ifmo.teplyakov.parser;
 
+import java.util.Map;
+
 public class Number implements TreeNode {
 
     public Number(Integer val) {
@@ -7,7 +9,7 @@ public class Number implements TreeNode {
     }
 
     @Override
-    public Integer evaluate() {
+    public Integer evaluate(Map<String, Integer> context) {
         return val;
     }
 

@@ -19,6 +19,7 @@ public class Token {
         CLOSE_BRACKET,
         QUESTION,
         COLON,
+        COMMA,
         EMPTY
     }
 

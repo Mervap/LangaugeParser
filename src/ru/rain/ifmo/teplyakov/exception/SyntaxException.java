@@ -1,6 +1,6 @@
-package ru.rain.ifmo.teplyakov;
+package ru.rain.ifmo.teplyakov.exception;
 
-public class SyntaxException extends Exception {
+public class SyntaxException extends ParserException {
     public SyntaxException() {
         super();
     }

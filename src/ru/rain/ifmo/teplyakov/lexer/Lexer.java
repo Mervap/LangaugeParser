@@ -1,6 +1,6 @@
 package ru.rain.ifmo.teplyakov.lexer;
 
-import ru.rain.ifmo.teplyakov.SyntaxException;
+import ru.rain.ifmo.teplyakov.exception.SyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +11,8 @@ public class Lexer {
         tokens = new ArrayList<>();
     }
 
-    public boolean hasNext() {
-        return pos < tokens.size();
-    }
-
-    public List<Token> getNext() {
-        if (!hasNext()) {
-            return null;
-        }
-
-        return tokens.get(pos++);
+    public List<List<Token>> getLines() {
+        return tokens;
     }
 
     public void addTokens(String line) throws SyntaxException {
@@ -53,6 +45,8 @@ public class Lexer {
                 nextTokenType = Token.TokenType.QUESTION;
             } else if (c == ':') {
                 nextTokenType = Token.TokenType.COLON;
+            } else if (c == ',') {
+                nextTokenType = Token.TokenType.COMMA;
             } else {
                 throw new SyntaxException("Syntax error");
             }
@@ -80,5 +74,4 @@ public class Lexer {
     }
 
     private List<List<Token>> tokens;
-    private int pos = 0;
 }
